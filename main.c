@@ -5,7 +5,18 @@
 ** main
 */
 
+#include "my.h"
+
 int main(void)
 {
-    return 0;
+    t_clients clients[100];
+    for (int i = 0; i != 100; i++) {
+        clients[i].control_fd = -1;
+        clients[i].data_fd = -1;
+        clients[i].original_data_fd = -1;
+    }
+    int server = create_server();
+    loop_server(server, clients);
 }
+
+

@@ -22,7 +22,7 @@ void loop_server(int serversocket, t_clients *clients)
             if (FD_ISSET(serversocket, &rfds)) {
                 int clientfd = accept(serversocket, (struct sockaddr *)&client,  (socklen_t*) (&addrlen));
                 add_client(clients, false, clientfd);
-                write(clientfd, "220 Service ready for new user.\n", 33);
+                write(clientfd, "220 Service ready for new user.\r\n", 33);
                 selectqueue--;
                 if(!selectqueue) continue;
             }
@@ -76,20 +76,7 @@ void read_clients_control(fd_set *rfds, t_clients *clients)
 {
     for (int i = 0; i!= 100; i++) {
         if (clients[i].control_fd > 0 && FD_ISSET(clients[i].control_fd, rfds)) {
-            char buf[1000] = {0};
-            int val = recv(clients[i].control_fd, buf, 1000, 0);
-            buf[strlen(buf) - 2] = '\0';
-            if (strcmp(buf, "PASV") == 0) {
-                add_data_port_to_client(clients, clients[i].control_fd);
-            }
-            if (strncmp(buf, "RETR", 4) == 0) {
-                do_retr_cmd(i, clients, buf);
-            }
-            if (val == 0) {
-                puts("closing");
-                close(clients[i].control_fd);
-                clients[i].control_fd = -1;
-            }
+            handle_client_control(i, clients);
         }
     }
 }

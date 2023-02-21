@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
+#include <strings.h>
 #ifndef MY_H_
     #define MY_H_
 struct clients {
@@ -28,6 +29,9 @@ struct clients {
     int control_fd;
     int data_port;
     int original_data_fd;
+    bool connected;
+    char *user;
+    char *pass;
 } typedef t_clients;
 int create_server(void);
 void loop_server(int serversocket, t_clients *clients);
@@ -41,4 +45,9 @@ char *my_revstr(char *src);
 void add_data_port_to_client(t_clients *clients, int clientfd);
 void read_clients_data(fd_set *rfds, t_clients *clients);
 void do_retr_cmd(int index, t_clients *clients, char *buf);
+int is_client_logged_in(int index, t_clients *clients);
+void handle_client_control(int index, t_clients *clients);
+void do_user_cmd(int index, t_clients *clients, char *buf);
+void do_pass_cmd(int index, t_clients *clients, char *buf);
+int is_login_or_pass(char *buf);
 #endif /* !MY_H_ */

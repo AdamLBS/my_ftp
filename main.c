@@ -14,6 +14,9 @@ int main(void)
         clients[i].control_fd = -1;
         clients[i].data_fd = -1;
         clients[i].original_data_fd = -1;
+        clients[i].connected = false;
+        clients[i].pass = NULL;
+        clients[i].user = NULL;
     }
     int server = create_server();
     loop_server(server, clients);

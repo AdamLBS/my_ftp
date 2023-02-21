@@ -31,27 +31,23 @@ void do_pass_cmd(int index, t_clients *clients, char *buf)
 {
     buf[strlen(buf) - 2] = '\0';
     char **parsed = malloc(sizeof(char *) * strlen(buf));
-    char *current;
-    char *separator = strdup(" ");
-    int i = 0;
-    while ((current = strtok_r(buf, separator, &buf))) {
+    char *current, *separator = strdup(" ");
+    for (int i = 0; (current = strtok_r(buf, separator, &buf)); i++) {
         char *new_string = strdup(current);
         parsed[i] = new_string;
         i++;
     }
     if (clients[index].user == NULL) {
-        char *msg = strdup("503 Login with USER first.\r\n");
-        write(clients[index].control_fd, msg, strlen(msg));
+        write(clients[index].control_fd, NEEDACCOUNT, strlen(NEEDACCOUNT));
         return;
     }
     if (parsed[1])
         clients[index].pass = parsed[1];
-    if (strcasecmp(clients[index].user, "Anonymous") == 0 && clients[index].pass == NULL) {
+    if (!strcasecmp(clients[index].user, "Anonymous") &&
+    !clients[index].pass) {
         clients[index].connected = true;
-        char *msg = strdup("230 User logged in, proceed.\r\n");
-        write(clients[index].control_fd, msg, strlen(msg));
+        write(clients[index].control_fd, USERLOGGED, strlen(USERLOGGED));
     }
-    return;
 }
 
 int is_login_or_pass(char *buf)

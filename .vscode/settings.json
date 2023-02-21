@@ -4,6 +4,9 @@
         "socket.h": "c",
         "array": "c",
         "string": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "types.h": "c",
+        "fcntl.h": "c",
+        "stdio.h": "c"
     }
 }

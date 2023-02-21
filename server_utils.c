@@ -22,7 +22,7 @@ void read_clients_data(fd_set *rfds, t_clients *clients)
         if (clients[i].data_fd > 0 &&
             FD_ISSET(clients[i].data_fd, rfds)) {
             char *buf;
-            int val = recv(clients[i].data_fd, buf, 1000, 0);
+            int val = read(clients[i].data_fd, buf, 1000);
             buf[strlen(buf) - 2] = '\0';
             check_if_client_closed(i, clients, val);
         }

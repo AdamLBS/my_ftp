@@ -20,7 +20,7 @@ int is_client_logged_in(int index, t_clients *clients)
 void handle_client_control(int index, t_clients *clients)
 {
     char buf[1000] = {0};
-    int val = recv(clients[index].control_fd, buf, 1000, 0);
+    int val = read(clients[index].control_fd, buf, 1000);
     if (strcmp(buf, "LOGOUT\r\n") == 0)
         do_logout(index, clients);
     if (is_login_or_pass(buf) == 0 && !is_client_logged_in(index, clients))

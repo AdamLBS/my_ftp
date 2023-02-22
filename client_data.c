@@ -20,6 +20,7 @@ int does_client_has_data(int index, t_clients *clients)
 {
     if (clients[index].data_fd == -1 &&
     clients[index].original_data_fd == -1) {
+        write(clients[index].control_fd, NODATA, strlen(NODATA));
         return 0;
     }
     return 1;

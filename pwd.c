@@ -9,6 +9,7 @@
 
 void do_pwd(int index, t_clients *clients)
 {
+    chdir(clients[index].pwd);
     char *old_pwd = getcwd(NULL, 0);
     write(clients[index].control_fd, "257 ", 4);
     write(clients[index].control_fd, old_pwd, strlen(old_pwd));

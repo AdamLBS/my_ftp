@@ -70,7 +70,8 @@ void check_cmds2(int index, t_clients *clients, char *buf)
         do_list(index, clients);
         return;
     }
-    do_unknown_cmd(index, clients);
+    if (clients[index].connected)
+        do_unknown_cmd(index, clients);
 }
 
 int check_cmds_nologin(int index, t_clients *clients, char *buf)

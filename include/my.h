@@ -48,6 +48,8 @@
         bool connected;
         char *user;
         char *pass;
+        char *old_pwd;
+        char *pwd;
     } typedef t_clients;
 
 
@@ -96,4 +98,5 @@
     void do_quit_cmd(int index, t_clients *clients);
     void do_help_cmd(int index, t_clients *clients);
     int check_cmds_nologin(int index, t_clients *clients, char *buf);
+    void initialize_clients(t_clients *clients, t_server *server);
 #endif /* !MY_H_ */

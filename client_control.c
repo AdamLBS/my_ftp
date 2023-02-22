@@ -25,16 +25,10 @@ void handle_client_control(int index, t_clients *clients)
         close(clients[index].control_fd);
         clients[index].control_fd = -1;
     }
+    if (check_cmds_nologin(index, clients, buf))
+        return;
     if (strcmp(buf, "LOGOUT\r\n") == 0 )
         do_logout(index, clients);
-    if (strcmp(buf, "QUIT\r\n") == 0) {
-        do_quit_cmd(index, clients);
-        return;
-    }
-    if (strcmp(buf, "\r\n") == 0) {
-        do_unknown_cmd(index, clients);
-        return;
-    }
     if (is_login_or_pass(buf) == 0 && !is_client_logged_in(index, clients))
         buf[0] = '\0';
     check_cmds(index, clients, buf);
@@ -77,4 +71,21 @@ void check_cmds2(int index, t_clients *clients, char *buf)
         return;
     }
     do_unknown_cmd(index, clients);
+}
+
+int check_cmds_nologin(int index, t_clients *clients, char *buf)
+{
+    if (strcmp(buf, "HELP\r\n") == 0) {
+        do_help_cmd(index, clients);
+        return 1;
+    }
+    if (strcmp(buf, "QUIT\r\n") == 0) {
+        do_quit_cmd(index, clients);
+        return 1;
+    }
+    if (strcmp(buf, "\r\n") == 0) {
+        do_unknown_cmd(index, clients);
+        return 1;
+    }
+    return 0;
 }

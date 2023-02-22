@@ -39,6 +39,7 @@
     #define UNKNOWN "500 Unknown command.\r\n"
     #define QUITMSG "221 Service closing control connection.\r\n"
     #define WRONGUSRMSG "530 Wrong USER.\r\n"
+    #define HELPMSG "214 Help message.\r\n"
     struct clients {
         int data_fd;
         int control_fd;
@@ -93,4 +94,6 @@
     void do_unknown_cmd(int index, t_clients *clients);
     void check_cmds2(int index, t_clients *clients, char *buf);
     void do_quit_cmd(int index, t_clients *clients);
+    void do_help_cmd(int index, t_clients *clients);
+    int check_cmds_nologin(int index, t_clients *clients, char *buf);
 #endif /* !MY_H_ */

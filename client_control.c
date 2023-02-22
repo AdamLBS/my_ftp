@@ -35,18 +35,38 @@ void handle_client_control(int index, t_clients *clients)
 
 void check_cmds(int index, t_clients *clients, char *buf)
 {
-    if (strcmp(buf, "PASV\r\n") == 0)
+    if (strcmp(buf, "PASV\r\n") == 0) {
         add_data_port_to_client(clients, clients[index].control_fd);
-    if (strcmp(buf, "NOOP\r\n") == 0)
+        return;
+    }
+    if (strcmp(buf, "NOOP\r\n") == 0) {
         do_noop(index, clients);
-    if (strncmp(buf, "RETR", 4) == 0)
+        return;
+    }
+    if (strncmp(buf, "RETR", 4) == 0) {
         do_retr_cmd(index, clients, buf);
-    if (strncmp(buf, "USER", 4) == 0)
+        return;
+    }
+    if (strncmp(buf, "USER", 4) == 0) {
         do_user_cmd(index, clients, buf);
-    if (strncmp(buf, "PASS", 4) == 0)
+        return;
+    }
+    if (strncmp(buf, "PASS", 4) == 0) {
         do_pass_cmd(index, clients, buf);
-    if (strcmp(buf, "PWD\r\n") == 0)
+        return;
+    }
+    if (strcmp(buf, "PWD\r\n") == 0) {
         do_pwd(index, clients);
-    if (strcmp(buf, "LIST\r\n") == 0)
+        return;
+    }
+    if (strcmp(buf, "LIST\r\n") == 0) {
         do_list(index, clients);
+        return;
+    }
+    check_cmds2(index, clients, buf);
+}
+
+void check_cmds2(int index, t_clients *clients, char *buf)
+{
+    do_unknown_cmd(index, clients);
 }

@@ -36,6 +36,7 @@
     #define FILEACTION "250 Requested file action okay, completed.\r\n"
     #define USERLOGGED "230 User logged in, proceed.\r\n"
     #define NEEDACCOUNT "332 Need account for login.\r\n"
+    #define UNKNOWN "500 Unknown command.\r\n"
     struct clients {
         int data_fd;
         int control_fd;
@@ -87,4 +88,6 @@
     void send_list_data(char *dirlist, int index, t_clients *clients);
     void check_if_client_closed(int index, t_clients *clients, int val);
     int help_message(int ac, char **av);
+    void do_unknown_cmd(int index, t_clients *clients);
+    void check_cmds2(int index, t_clients *clients, char *buf);
 #endif /* !MY_H_ */

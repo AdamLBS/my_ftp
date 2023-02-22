@@ -47,6 +47,9 @@ void do_pass_cmd(int index, t_clients *clients, char *buf)
     !clients[index].pass) {
         clients[index].connected = true;
         write(clients[index].control_fd, USERLOGGED, strlen(USERLOGGED));
+    } else {
+        char *msg = strdup("530 Wrong USER.\r\n");
+        write(clients[index].control_fd, msg, strlen(msg));
     }
 }
 

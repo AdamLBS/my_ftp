@@ -26,7 +26,7 @@ void send_pasv_info(char *adress, int port, int fd)
     write(fd, portStr1, strlen(portStr1));
     write(fd, ",", 1);
     write(fd, portStr2, strlen(portStr2));
-    write(fd, ")\r\n", 4);
+    write(fd, ")\r\n", 3);
     free(portStr1);
     free(portStr2);
 }

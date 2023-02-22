@@ -35,7 +35,6 @@ void do_pass_cmd(int index, t_clients *clients, char *buf)
     for (int i = 0; (current = strtok_r(buf, separator, &buf)); i++) {
         char *new_string = strdup(current);
         parsed[i] = new_string;
-        i++;
     }
     if (clients[index].user == NULL) {
         write(clients[index].control_fd, NEEDACCOUNT, strlen(NEEDACCOUNT));
@@ -47,10 +46,8 @@ void do_pass_cmd(int index, t_clients *clients, char *buf)
     !clients[index].pass) {
         clients[index].connected = true;
         write(clients[index].control_fd, USERLOGGED, strlen(USERLOGGED));
-    } else {
-        char *msg = strdup("530 Wrong USER.\r\n");
-        write(clients[index].control_fd, msg, strlen(msg));
-    }
+    } else
+        write(clients[index].control_fd, WRONGUSRMSG, strlen(WRONGUSRMSG));
 }
 
 int is_login_or_pass(char *buf)

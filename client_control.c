@@ -21,16 +21,24 @@ void handle_client_control(int index, t_clients *clients)
 {
     char buf[1000] = {0};
     int val = read(clients[index].control_fd, buf, 1000);
-    if (strcmp(buf, "LOGOUT\r\n") == 0)
-        do_logout(index, clients);
-    if (is_login_or_pass(buf) == 0 && !is_client_logged_in(index, clients))
-        buf[0] = '\0';
-    check_cmds(index, clients, buf);
-    if (val == 0) {
-        puts("closing");
+    if (val == 0 && clients[index].control_fd) {
         close(clients[index].control_fd);
         clients[index].control_fd = -1;
     }
+    if (strcmp(buf, "LOGOUT\r\n") == 0 )
+        do_logout(index, clients);
+    if (strcmp(buf, "QUIT\r\n") == 0) {
+        do_quit_cmd(index, clients);
+        return;
+    }
+    if (strcmp(buf, "\r\n") == 0) {
+        do_unknown_cmd(index, clients);
+        return;
+    }
+    if (is_login_or_pass(buf) == 0 && !is_client_logged_in(index, clients))
+        buf[0] = '\0';
+    check_cmds(index, clients, buf);
+
 }
 
 void check_cmds(int index, t_clients *clients, char *buf)
@@ -51,6 +59,11 @@ void check_cmds(int index, t_clients *clients, char *buf)
         do_user_cmd(index, clients, buf);
         return;
     }
+    check_cmds2(index, clients, buf);
+}
+
+void check_cmds2(int index, t_clients *clients, char *buf)
+{
     if (strncmp(buf, "PASS", 4) == 0) {
         do_pass_cmd(index, clients, buf);
         return;
@@ -63,10 +76,5 @@ void check_cmds(int index, t_clients *clients, char *buf)
         do_list(index, clients);
         return;
     }
-    check_cmds2(index, clients, buf);
-}
-
-void check_cmds2(int index, t_clients *clients, char *buf)
-{
     do_unknown_cmd(index, clients);
 }

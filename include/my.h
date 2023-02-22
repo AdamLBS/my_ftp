@@ -37,6 +37,8 @@
     #define USERLOGGED "230 User logged in, proceed.\r\n"
     #define NEEDACCOUNT "332 Need account for login.\r\n"
     #define UNKNOWN "500 Unknown command.\r\n"
+    #define QUITMSG "221 Service closing control connection.\r\n"
+    #define WRONGUSRMSG "530 Wrong USER.\r\n"
     struct clients {
         int data_fd;
         int control_fd;
@@ -90,4 +92,5 @@
     int help_message(int ac, char **av);
     void do_unknown_cmd(int index, t_clients *clients);
     void check_cmds2(int index, t_clients *clients, char *buf);
+    void do_quit_cmd(int index, t_clients *clients);
 #endif /* !MY_H_ */

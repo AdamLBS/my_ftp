@@ -31,7 +31,6 @@ int main(int ac, char **av)
     loop_server(serverfd, clients, server);
 }
 
-
 int help_message(int ac, char **av)
 {
     if (ac == 2 && strcmp(av[1], "-help") == 0) {

@@ -63,7 +63,6 @@ void send_file_to_data(int index, t_clients *clients, char *path, int fd)
     close(fd);
     write(clients[index].data_fd, buf, strlen(buf));
     free(buf);
-    write(clients[index].data_fd, "\r\n", 2);
     write(clients[index].control_fd, CLOSEDATA, strlen(CLOSEDATA));
     clear_client_data(index, clients);
 }

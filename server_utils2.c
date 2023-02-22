@@ -9,7 +9,7 @@
 
 void check_if_client_closed(int index, t_clients *clients, int val)
 {
-    if (val == 0) {
+    if (val == 0 && clients[index].data_fd) {
         close(clients[index].data_fd);
         clients[index].data_fd = -1;
     }

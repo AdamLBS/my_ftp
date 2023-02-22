@@ -86,4 +86,5 @@
     int *selectqueue);
     void send_list_data(char *dirlist, int index, t_clients *clients);
     void check_if_client_closed(int index, t_clients *clients, int val);
+    int help_message(int ac, char **av);
 #endif /* !MY_H_ */

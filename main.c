@@ -9,6 +9,8 @@
 
 int main(int ac, char **av)
 {
+    if (help_message(ac, av))
+        return 0;
     if (ac != 3)
         return 84;
     t_server *server = malloc(sizeof(t_server));
@@ -27,4 +29,19 @@ int main(int ac, char **av)
     }
     int serverfd = create_server(server);
     loop_server(serverfd, clients, server);
+}
+
+
+int help_message(int ac, char **av)
+{
+    if (ac == 2 && strcmp(av[1], "-help") == 0) {
+        struct stat info;
+        stat("helpmsg.txt", &info);
+        char *buf = malloc(sizeof(char) * info.st_size);
+        int fd = open("helpmsg.txt", O_RDONLY);
+        read(fd, buf, info.st_size);
+        write(1, buf, strlen(buf));
+        return 1;
+    }
+    return 0;
 }

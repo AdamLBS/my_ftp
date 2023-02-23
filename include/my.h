@@ -41,6 +41,7 @@
     #define WRONGUSRMSG "530 Wrong USER.\r\n"
     #define HELPMSG "214 Help message.\r\n"
     #define ERRORCWD "550 Failed to change directory.\r\n"
+    #define ERRORDEL "501 No file name.\r\n"
     struct clients {
         int data_fd;
         int control_fd;
@@ -106,4 +107,8 @@
     void check_cmds3(int index, t_clients *clients, char *buf);
     void do_cdup(int index, t_clients *clients);
     int is_buffer_ended(int index, t_clients *clients);
+    void clear_buffer(int index, t_clients *clients);
+    void create_buffer(int index, t_clients *clients);
+    void do_delete(char *file, int index, t_clients *clients);
+    void do_delete_cmd(int index, t_clients *clients, char *buf);
 #endif /* !MY_H_ */

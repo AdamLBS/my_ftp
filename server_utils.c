@@ -40,6 +40,7 @@ void add_data_port_to_client(t_clients *clients, int clientfd)
             getsockname(fd, (struct sockaddr *)&local_address,
             (socklen_t*) (&addr_size));
             clients[i].original_data_fd = fd;
+            clients[i].buffer = NULL;
         }
     }
 }

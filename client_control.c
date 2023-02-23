@@ -19,8 +19,7 @@ int is_client_logged_in(int index, t_clients *clients)
 
 void handle_client_control(int index, t_clients *clients)
 {
-    if (clients[index].buffer == NULL)
-        clients[index].buffer = malloc(sizeof(char) * 1000);
+    create_buffer(index, clients);
     char buf[1000] = {0};
     int val = read(clients[index].control_fd, buf, 1000);
     if (val == 0 && clients[index].control_fd) {
@@ -38,7 +37,6 @@ void handle_client_control(int index, t_clients *clients)
     !is_client_logged_in(index, clients))
         clients[index].buffer[0] = '\0';
     check_cmds(index, clients, clients[index].buffer);
-    clients[index].buffer = NULL;
 }
 
 int is_buffer_ended(int index, t_clients *clients)

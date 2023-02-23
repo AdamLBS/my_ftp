@@ -42,8 +42,7 @@ void do_pass_cmd(int index, t_clients *clients, char *buf)
     }
     if (parsed[1])
         clients[index].pass = parsed[1];
-    if ((strcasecmp(clients[index].user, "Anonymous") == 0) &&
-    !clients[index].pass) {
+    if ((strcasecmp(clients[index].user, "Anonymous") == 0)) {
         clients[index].connected = true;
         write(clients[index].control_fd, USERLOGGED, strlen(USERLOGGED));
     } else

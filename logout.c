@@ -19,4 +19,5 @@ void do_logout(int index, t_clients *clients)
     clients[index].connected = false;
     clients[index].pass = NULL;
     clients[index].user = NULL;
+    clients[index].buffer = NULL;
 }

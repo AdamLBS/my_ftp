@@ -40,6 +40,7 @@
     #define QUITMSG "221 Service closing control connection.\r\n"
     #define WRONGUSRMSG "530 Wrong USER.\r\n"
     #define HELPMSG "214 Help message.\r\n"
+    #define ERRORCWD "550 Failed to change directory.\r\n"
     struct clients {
         int data_fd;
         int control_fd;
@@ -50,6 +51,7 @@
         char *pass;
         char *old_pwd;
         char *pwd;
+        char *buffer;
     } typedef t_clients;
 
 
@@ -99,4 +101,9 @@
     void do_help_cmd(int index, t_clients *clients);
     int check_cmds_nologin(int index, t_clients *clients, char *buf);
     void initialize_clients(t_clients *clients, t_server *server);
+    void do_cwd_cmd(int index, t_clients *clients, char *buf);
+    void do_change_directory(char *dir, int index, t_clients *clients);
+    void check_cmds3(int index, t_clients *clients, char *buf);
+    void do_cdup(int index, t_clients *clients);
+    int is_buffer_ended(int index, t_clients *clients);
 #endif /* !MY_H_ */

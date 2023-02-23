@@ -28,6 +28,7 @@
     #include <sys/stat.h>
     #include <fcntl.h>
     #include <dirent.h>
+    #include <sys/sendfile.h>
     #define MSGOKAY  "200 Command okay.\r\n"
     #define FILEOKAY "150 File status okay; about to open data connection.\r\n"
     #define CLOSEDATA "226 Closing data connection.\r\n"
@@ -53,6 +54,9 @@
         char *old_pwd;
         char *pwd;
         char *buffer;
+        char *data_buffer;
+        bool check_read;
+        int readfd;
     } typedef t_clients;
 
 
@@ -111,4 +115,7 @@
     void create_buffer(int index, t_clients *clients);
     void do_delete(char *file, int index, t_clients *clients);
     void do_delete_cmd(int index, t_clients *clients, char *buf);
+    void do_stor_cmd(int index, t_clients *clients, char *buf);
+    void upload_data_to_file(int index, t_clients *clients, char *path);
+    void handling_data_socket(int index, t_clients *clients);
 #endif /* !MY_H_ */

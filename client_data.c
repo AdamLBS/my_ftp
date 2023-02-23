@@ -11,6 +11,7 @@ void clear_client_data(int index, t_clients *clients)
 {
     close(clients[index].data_fd);
     close(clients[index].original_data_fd);
+    clients[index].check_read = false;
     clients[index].data_fd = -1;
     clients[index].data_port = -1;
     clients[index].original_data_fd = -1;

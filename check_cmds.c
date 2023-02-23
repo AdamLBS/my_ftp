@@ -59,6 +59,10 @@ void check_cmds3(int index, t_clients *clients, char *buf)
         do_delete_cmd(index, clients, buf);
         return clear_buffer(index, clients);
     }
+    if (strncmp(buf, "STOR", 4) == 0) {
+        do_stor_cmd(index, clients, buf);
+        return clear_buffer(index, clients);
+    }
     if (clients[index].connected)
         do_unknown_cmd(index, clients);
 }

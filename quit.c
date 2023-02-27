@@ -10,6 +10,7 @@
 void do_quit_cmd(int index, t_clients *clients)
 {
     write(clients[index].control_fd, QUITMSG, strlen(QUITMSG));
+    shutdown(clients[index].control_fd,SHUT_RDWR);
     close(clients[index].control_fd);
     clients[index].control_fd = -1;
 }

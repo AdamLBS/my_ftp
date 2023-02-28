@@ -118,4 +118,6 @@
     void do_stor_cmd(int index, t_clients *clients, char *buf);
     void upload_data_to_file(int index, t_clients *clients, char *path);
     void handling_data_socket(int index, t_clients *clients);
+    void do_list_with_params(int index, t_clients *clients, char *buf);
+    void exec_list_params(int index, t_clients *clients, char *val);
 #endif /* !MY_H_ */

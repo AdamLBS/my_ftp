@@ -38,7 +38,7 @@ void check_cmds2(int index, t_clients *clients, char *buf)
         do_pwd(index, clients);
         return clear_buffer(index, clients);
     }
-    if (strncmp(buf, "LIST", 4) == 0) {
+    if (strcmp(buf, "LIST\r\n") == 0) {
         do_list(index, clients);
         return clear_buffer(index, clients);
     }
@@ -61,6 +61,10 @@ void check_cmds3(int index, t_clients *clients, char *buf)
     }
     if (strncmp(buf, "STOR", 4) == 0) {
         do_stor_cmd(index, clients, buf);
+        return clear_buffer(index, clients);
+    }
+    if (strncmp(buf, "LIST", 4) == 0) {
+        do_list_with_params(index, clients, buf);
         return clear_buffer(index, clients);
     }
     if (clients[index].connected)

@@ -58,9 +58,9 @@ int create_data(struct sockaddr_in *adress, int clienFd)
     getsockname(sockfd, (struct sockaddr *)adress,  (socklen_t*) (&datalen) );
     int client_port = ntohs(adress->sin_port);
     getsockname(clienFd, (struct sockaddr *)adress,  (socklen_t*) (&datalen) );
-    struct in_addr ipAddr = adress->sin_addr;
+    struct in_addr ipaddr = adress->sin_addr;
     char str[INET_ADDRSTRLEN];
-    inet_ntop( AF_INET, &ipAddr, str, INET_ADDRSTRLEN );
+    inet_ntop( AF_INET, &ipaddr, str, INET_ADDRSTRLEN );
     send_pasv_info(str, client_port, clienFd);
     return sockfd;
 }

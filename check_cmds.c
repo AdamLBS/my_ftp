@@ -67,6 +67,15 @@ void check_cmds3(int index, t_clients *clients, char *buf)
         do_list_with_params(index, clients, buf);
         return clear_buffer(index, clients);
     }
+    check_cmds4(index, clients, buf);
+}
+
+void check_cmds4(int index, t_clients *clients, char *buf)
+{
+    if (strncmp(buf, "PORT", 4) == 0) {
+        do_port_cmd(index, clients, buf);
+        return clear_buffer(index, clients);
+    }
     if (clients[index].connected)
         do_unknown_cmd(index, clients);
 }

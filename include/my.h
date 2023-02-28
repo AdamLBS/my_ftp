@@ -43,6 +43,8 @@
     #define HELPMSG "214 Help message.\r\n"
     #define ERRORCWD "550 Failed to change directory.\r\n"
     #define ERRORDEL "501 No file name.\r\n"
+    #define PORTERR "425 Can't open data connection.\r\n"
+    #define PORTOKAY "200 Command okay.\r\n"
     struct clients {
         int data_fd;
         int control_fd;
@@ -120,4 +122,12 @@
     void handling_data_socket(int index, t_clients *clients);
     void do_list_with_params(int index, t_clients *clients, char *buf);
     void exec_list_params(int index, t_clients *clients, char *val);
+    void do_port_cmd(int index, t_clients *clients, char *buf);
+    void my_put_nbr(int nb);
+    void my_putchar(char c);
+    char **split_args(char *buf);
+    int check_port_connection(t_clients *clients, int index,
+        struct sockaddr_in data_addr, char *str);
+    int my_arrlen(char **arr);
+    void check_cmds4(int index, t_clients *clients, char *buf);
 #endif /* !MY_H_ */

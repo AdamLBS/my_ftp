@@ -57,8 +57,11 @@ int create_data(struct sockaddr_in *adress, int clienFd)
     int datalen = sizeof(adress);
     getsockname(sockfd, (struct sockaddr *)adress,  (socklen_t*) (&datalen) );
     int client_port = ntohs(adress->sin_port);
-    char *server_ip = inet_ntoa(adress->sin_addr);
-    send_pasv_info(server_ip, client_port, clienFd);
+    getsockname(clienFd, (struct sockaddr *)adress,  (socklen_t*) (&datalen) );
+    struct in_addr ipAddr = adress->sin_addr;
+    char str[INET_ADDRSTRLEN];
+    inet_ntop( AF_INET, &ipAddr, str, INET_ADDRSTRLEN );
+    send_pasv_info(str, client_port, clienFd);
     return sockfd;
 }
 

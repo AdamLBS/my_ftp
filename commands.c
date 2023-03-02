@@ -69,7 +69,7 @@ void send_file_to_data(int index, t_clients *clients, char *path, int fd)
             break;
         }
         write(clients[index].data_fd, buf, strlen(buf));
-        memset(buf, 0, 1024);    
+        memset(buf, 0, 1024);
     }
     close(fd);
     free(buf);

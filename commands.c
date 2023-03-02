@@ -55,13 +55,23 @@ void do_retr_cmd(int index, t_clients *clients, char *buf)
 
 void send_file_to_data(int index, t_clients *clients, char *path, int fd)
 {
-    struct stat info;
-    stat(path, &info);
+    if (!path) {
+        write(clients[index].control_fd, "550 Failed to open file.\n\r", 26);
+        return;
+    }
+    char *buf = malloc(sizeof(char) * 1024);
+    memset(buf, 0, 1024);
+    ssize_t byte = 0;
     write(clients[index].control_fd, FILEOKAY, strlen(FILEOKAY));
-    char *buf = malloc(sizeof(char) * info.st_size);
-    read(fd, buf, info.st_size);
+    while (1) {
+        byte = read(fd, buf, sizeof(buf));
+        if (byte == -1 || byte == 0) {
+            break;
+        }
+        write(clients[index].data_fd, buf, strlen(buf));
+        memset(buf, 0, 1024);    
+    }
     close(fd);
-    write(clients[index].data_fd, buf, strlen(buf));
     free(buf);
     write(clients[index].control_fd, CLOSEDATA, strlen(CLOSEDATA));
     clear_client_data(index, clients);

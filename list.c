@@ -23,7 +23,7 @@ void do_list(int index, t_clients *clients)
     }
     while ((list = readdir(dir))) {
         char tmp[100] = {0};
-        snprintf(tmp, sizeof(tmp), "%s\r\n", list->d_name);
+        snprintf(tmp, sizeof(tmp), "%s\n", list->d_name);
         strcat(dirlist, tmp);
     }
     closedir(dir);

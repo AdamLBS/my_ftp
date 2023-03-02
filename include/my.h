@@ -45,6 +45,7 @@
     #define ERRORDEL "501 No file name.\r\n"
     #define PORTERR "425 Can't open data connection.\r\n"
     #define PORTOKAY "200 Command okay.\r\n"
+    #define TYPEOKAY "200 Switching to Binary mode.\r\n"
     struct clients {
         int data_fd;
         int control_fd;

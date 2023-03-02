@@ -76,6 +76,10 @@ void check_cmds4(int index, t_clients *clients, char *buf)
         do_port_cmd(index, clients, buf);
         return clear_buffer(index, clients);
     }
+    if (strcmp(buf, "TYPE I\r\n") == 0) {
+        write(clients[index].control_fd, TYPEOKAY, strlen(TYPEOKAY));
+        return clear_buffer(index, clients);
+    }
     if (clients[index].connected)
         do_unknown_cmd(index, clients);
 }

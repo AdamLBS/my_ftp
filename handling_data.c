@@ -11,7 +11,6 @@ void handling_data_socket(int index, t_clients *clients)
 {
     char buf[2048];
     int val = read(clients[index].data_fd, buf, 2048);
-    buf[strlen(buf) - 2] = '\0';
     if (clients[index].check_read) {
         write(clients[index].readfd, buf, val);
         if (val == 0) {

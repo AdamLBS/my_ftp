@@ -131,4 +131,6 @@
         struct sockaddr_in data_addr, char *str);
     int my_arrlen(char **arr);
     void check_cmds4(int index, t_clients *clients, char *buf);
+    int get_port(char *port1, char *port2);
+    char *get_client_ip(char **parsed);
 #endif /* !MY_H_ */

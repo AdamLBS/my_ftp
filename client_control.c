@@ -42,6 +42,9 @@ void handle_client_control(int index, t_clients *clients)
 int is_buffer_ended(int index, t_clients *clients)
 {
     int len = strlen(clients[index].buffer);
+    if (clients[index].buffer[len - 1] == '\0' ||
+    clients[index].buffer[len - 2] == '\0')
+        return 0;
     if (clients[index].buffer[len - 1] != '\n' ||
     clients[index].buffer[len - 2] != '\r')
         return 0;

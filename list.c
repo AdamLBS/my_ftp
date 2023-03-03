@@ -13,21 +13,20 @@ void do_list(int index, t_clients *clients)
         return;
     DIR *dir;
     struct dirent *list;
-    char *dirlist = malloc(sizeof(char) * 10000);
-    memset(dirlist, 0, 10000);
     dir = opendir(getcwd(NULL, 0));
     if (!dir) {
         char *msg = strdup("550 Error while opening directory\r\n");
         write(clients[index].control_fd, msg, strlen(msg));
         return;
     }
+    write(clients[index].control_fd, FILEOKAY, strlen(FILEOKAY));
     while ((list = readdir(dir))) {
-        char tmp[100] = {0};
+        char tmp[256] = {0};
         snprintf(tmp, sizeof(tmp), "%s\n", list->d_name);
-        strcat(dirlist, tmp);
+        write(clients[index].data_fd, tmp, strlen(tmp));
     }
     closedir(dir);
-    send_list_data(dirlist, index, clients);
+    send_list_data("", index, clients);
     clear_client_data(index, clients);
 }
 
@@ -53,27 +52,24 @@ void exec_list_params(int index, t_clients *clients, char *val)
 {
     DIR *dir;
     struct dirent *list;
-    char *dirlist = malloc(sizeof(char) * 10000);
-    memset(dirlist, 0, 10000);
     dir = opendir(val);
     if (!dir) {
         char *msg = strdup("550 Error while opening directory\r\n");
         write(clients[index].control_fd, msg, strlen(msg));
         return;
     }
+    write(clients[index].control_fd, FILEOKAY, strlen(FILEOKAY));
     while ((list = readdir(dir))) {
-        char tmp[100] = {0};
-        snprintf(tmp, sizeof(tmp), "%s\r\n", list->d_name);
-        strcat(dirlist, tmp);
+        char tmp[256] = {0};
+        snprintf(tmp, sizeof(tmp), "%s\n", list->d_name);
+        write(clients[index].data_fd, tmp, strlen(tmp));
     }
     closedir(dir);
-    send_list_data(dirlist, index, clients);
+    send_list_data("", index, clients);
     clear_client_data(index, clients);
 }
 
 void send_list_data(char *dirlist, int index, t_clients *clients)
 {
-    write(clients[index].control_fd, FILEOKAY, strlen(FILEOKAY));
-    write(clients[index].data_fd, dirlist, strlen(dirlist));
     write(clients[index].control_fd, CLOSEDATA, strlen(CLOSEDATA));
 }

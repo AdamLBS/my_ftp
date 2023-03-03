@@ -30,6 +30,7 @@ void add_data_port_to_client(t_clients *clients, int clientfd)
 {
     for (int i = 0; i != 100; i++) {
         if (clients[i].control_fd == clientfd) {
+            clear_client_data(i, clients);
             struct sockaddr_in adress;
             int fd = create_data(&adress, clientfd);
             struct sockaddr_in local_address;

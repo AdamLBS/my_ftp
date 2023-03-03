@@ -11,7 +11,8 @@ void do_user_cmd(int index, t_clients *clients, char *buf)
 {
     buf[strlen(buf) - 2] = '\0';
     char **parsed = malloc(sizeof(char *) * strlen(buf));
-    char *current;
+    memset(parsed, 0, strlen(buf));
+    char *current = NULL;
     char *separator = strdup(" ");
     int i = 0;
     while ((current = strtok_r(buf, separator, &buf))) {
@@ -19,7 +20,8 @@ void do_user_cmd(int index, t_clients *clients, char *buf)
         parsed[i] = new_string;
         i++;
     }
-    if (parsed[1]) {
+    parsed[i] = NULL;
+    if (my_arrlen(parsed) > 1) {
         clients[index].user = parsed[1];
         char *msg = strdup("331 User name okay, need password.\r\n");
         write(clients[index].control_fd, msg, strlen(msg));
@@ -32,10 +34,12 @@ void do_pass_cmd(int index, t_clients *clients, char *buf)
     buf[strlen(buf) - 2] = '\0';
     char **parsed = malloc(sizeof(char *) * strlen(buf));
     char *current, *separator = strdup(" ");
-    for (int i = 0; (current = strtok_r(buf, separator, &buf)); i++) {
+    int i = 0;
+    for (; (current = strtok_r(buf, separator, &buf)); i++) {
         char *new_string = strdup(current);
         parsed[i] = new_string;
     }
+    parsed[i] = NULL;
     if (clients[index].user == NULL) {
         write(clients[index].control_fd, NEEDACCOUNT, strlen(NEEDACCOUNT));
         return;

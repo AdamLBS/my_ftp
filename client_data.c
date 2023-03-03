@@ -9,8 +9,10 @@
 
 void clear_client_data(int index, t_clients *clients)
 {
-    close(clients[index].data_fd);
-    close(clients[index].original_data_fd);
+    if (clients[index].data_fd != -1)
+        close(clients[index].data_fd);
+    if (clients[index].original_data_fd != -1)
+        close(clients[index].original_data_fd);
     clients[index].check_read = false;
     clients[index].data_fd = -1;
     clients[index].data_port = -1;

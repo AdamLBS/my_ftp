@@ -47,6 +47,8 @@ void initialize_clients(t_clients *clients, t_server *server)
         clients[i].connected = false;
         clients[i].pass = NULL;
         clients[i].user = NULL;
+        clients[i].buffer = NULL;
+        clients[i].check_read = false;
         clients[i].pwd = server->serverpath;
     }
 }

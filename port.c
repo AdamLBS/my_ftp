@@ -9,40 +9,37 @@
 
 void do_port_cmd(int index, t_clients *clients, char *buf)
 {
-    struct sockaddr_in adress, data_addr;
-    int datalen = sizeof(adress);
-    getsockname(clients[index].control_fd, (struct sockaddr *)&adress,
-    (socklen_t*) (&datalen) );
-    struct in_addr ipaddr = adress.sin_addr;
+    struct sockaddr_in data_addr;
+    int datalen = sizeof(data_addr);
     char **parsed = split_args(buf);
+    clear_client_data(index, clients);
+    char *ip = get_client_ip(parsed);
     if (my_arrlen(parsed) != 6) {
         write(clients[index].control_fd, PORTERR, strlen(PORTERR));
         return;
     }
-    inet_ntop(AF_INET, &ipaddr, get_client_ip(parsed), INET_ADDRSTRLEN);
     int port = get_port(parsed[4], parsed[5]);
+    data_addr.sin_addr.s_addr = inet_addr(ip);
     data_addr.sin_port = htons(port);
     data_addr.sin_family = AF_INET;
     clients[index].data_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (check_port_connection(clients, index, data_addr, get_client_ip(parsed)))
+    if (check_port_connection(clients, index, data_addr, ip))
         return;
     write(clients[index].control_fd, PORTOKAY, strlen(PORTOKAY));
     clients[index].original_data_fd = clients[index].data_fd;
+    free_port_val(ip, parsed);
 }
 
 char *get_client_ip(char **parsed)
 {
     char *full_val = malloc(sizeof(char) * 17);
+    memset(full_val, 0, 17);
     int max = 4;
     for (int i = 0; i != max ; i++) {
         strcat(full_val, parsed[i]);
-        int len = strlen(full_val);
-        if (i + 1 != 4) {
-            full_val[len] = '.';
-            full_val[len + 1] = '\0';
-        }
+        if ((i + 1 != max))
+            strcat(full_val, ".");
     }
-    write(1, full_val, strlen(full_val));
     return full_val;
 }
 
@@ -61,6 +58,7 @@ struct sockaddr_in data_addr, char *str)
     if (inet_pton(AF_INET, str, &data_addr.sin_addr) < 0) {
         close(clients[index].data_fd);
         clients[index].data_fd = -1;
+        clients[index].original_data_fd = -1;
         write(clients[index].control_fd, PORTERR, strlen(PORTERR));
         return 1;
     }
@@ -69,6 +67,7 @@ struct sockaddr_in data_addr, char *str)
         write(clients[index].control_fd, PORTERR, strlen(PORTERR));
         close(clients[index].data_fd);
         clients[index].data_fd = -1;
+        clients[index].original_data_fd = -1;
         return 1;
     };
     return 0;
@@ -76,8 +75,8 @@ struct sockaddr_in data_addr, char *str)
 
 char **split_args(char *buf)
 {
+    char **parsed2 = malloc(sizeof(char *) * strlen(buf) + 1);
     buf[strlen(buf) - 2] = '\0';
-    char **parsed2 = malloc(sizeof(char *) * strlen(buf));
     char *current, *current2;
     char *buf2 = strdup(buf);
     char *separator2 = strdup(",");
@@ -90,5 +89,6 @@ char **split_args(char *buf)
         parsed2[j] = new_string;
         j++;
     }
+    parsed2[j] = NULL;
     return parsed2;
 }

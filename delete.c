@@ -11,6 +11,7 @@ void do_delete_cmd(int index, t_clients *clients, char *buf)
 {
     buf[strlen(buf) - 2] = '\0';
     char **parsed = malloc(sizeof(char *) * strlen(buf));
+    memset(parsed, 0, strlen(buf));
     char *current;
     char *separator = strdup(" ");
     int i = 0;
@@ -29,7 +30,7 @@ void do_delete_cmd(int index, t_clients *clients, char *buf)
 void do_delete(char *file, int index, t_clients *clients)
 {
     if (remove(file) < 0) {
-        write(clients[index].control_fd, "501 Error.\r\n", 12);
+        write(clients[index].control_fd, "550 Error.\r\n", 12);
         return;
     }
     write(clients[index].control_fd, FILEACTION, strlen(FILEACTION));

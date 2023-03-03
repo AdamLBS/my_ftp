@@ -9,16 +9,19 @@
 
 void handling_data_socket(int index, t_clients *clients)
 {
-    char buf[2048];
-    int val = read(clients[index].data_fd, buf, 2048);
-    if (clients[index].check_read && clients[index].data_fd != -1) {
-        write(clients[index].readfd, buf, val);
-        if (val == 0) {
-            close(clients[index].readfd);
-            write(clients[index].control_fd, CLOSEDATA, strlen(CLOSEDATA));
-            close(clients[index].original_data_fd);
-            clients[index].original_data_fd = -1;
-            clients[index].data_fd = -1;
+    char buf[2048] = {0};
+    size_t byte = 0;
+    if (!clients[index].check_read || clients[index].data_fd == -1)
+        return;
+    while (1) {
+        byte = read(clients[index].data_fd, buf, 2048);
+        if (byte == -1 || byte == 0) {
+            break;
         }
+        write(clients[index].readfd, buf, byte);
+        memset(buf, 0, 2048);
     }
+    close(clients[index].readfd);
+    write(clients[index].control_fd, CLOSEDATA, strlen(CLOSEDATA));
+    clear_client_data(index, clients);
 }

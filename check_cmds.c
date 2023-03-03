@@ -63,7 +63,7 @@ void check_cmds3(int index, t_clients *clients, char *buf)
         do_stor_cmd(index, clients, buf);
         return clear_buffer(index, clients);
     }
-    if (strncmp(buf, "LIST", 4) == 0) {
+    if (strncmp(buf, "LIST ", 5) == 0) {
         do_list_with_params(index, clients, buf);
         return clear_buffer(index, clients);
     }
@@ -77,6 +77,10 @@ void check_cmds4(int index, t_clients *clients, char *buf)
         return clear_buffer(index, clients);
     }
     if (strcmp(buf, "TYPE I\r\n") == 0) {
+        write(clients[index].control_fd, TYPEOKAY, strlen(TYPEOKAY));
+        return clear_buffer(index, clients);
+    }
+    if (strcmp(buf, "TYPE A\r\n") == 0) {
         write(clients[index].control_fd, TYPEOKAY, strlen(TYPEOKAY));
         return clear_buffer(index, clients);
     }

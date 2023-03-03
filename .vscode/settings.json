@@ -11,6 +11,8 @@
         "un.h": "c",
         "string.h": "c",
         "stdlib.h": "c",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "stdbool.h": "c",
+        "select.h": "c"
     }
 }

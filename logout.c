@@ -10,6 +10,7 @@
 void do_logout(int index, t_clients *clients)
 {
     write(clients[index].control_fd, LOGOUTMSG, strlen(LOGOUTMSG));
+    shutdown(clients[index].control_fd, SHUT_RDWR);
     close(clients[index].control_fd);
     if (clients[index].data_fd != -1)
         close(clients[index].data_fd);

@@ -32,7 +32,6 @@ int help_message(int ac, char **av)
         char *buf = malloc(sizeof(char) * info.st_size);
         int fd = open("helpmsg.txt", O_RDONLY);
         read(fd, buf, info.st_size);
-        write(1, buf, strlen(buf));
         return 1;
     }
     return 0;
@@ -49,6 +48,9 @@ void initialize_clients(t_clients *clients, t_server *server)
         clients[i].user = NULL;
         clients[i].buffer = NULL;
         clients[i].check_read = false;
+        clients[i].pasv = false;
+        clients[i].activ_ip = NULL;
+        clients[i].activ_port = 0;
         clients[i].pwd = server->serverpath;
     }
 }

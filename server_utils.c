@@ -19,8 +19,7 @@ void read_clients_control(fd_set *rfds, t_clients *clients)
 void read_clients_data(fd_set *rfds, t_clients *clients)
 {
     for (int i = 0; i != 100; i++) {
-        if (clients[i].data_fd > 0 &&
-            FD_ISSET(clients[i].data_fd, rfds)) {
+        if (clients[i].data_fd > 0) {
                 handling_data_socket(i, clients);
         }
     }
@@ -39,6 +38,9 @@ void add_data_port_to_client(t_clients *clients, int clientfd)
             (socklen_t*) (&addr_size));
             clients[i].original_data_fd = fd;
             clients[i].buffer = NULL;
+            clients[i].pasv = true;
+            clients[i].activ_ip = NULL;
+            clients[i].activ_port = 0;
         }
     }
 }

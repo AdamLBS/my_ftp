@@ -9,29 +9,30 @@
 
 void do_list(int index, t_clients *clients)
 {
+    accept_data(index, clients);
     if (does_client_has_data(index, clients) == 0)
         return;
-    DIR *dir;
-    struct dirent *list;
-    dir = opendir(getcwd(NULL, 0));
-    if (!dir) {
+    FILE *fd = popen("ls -l --time-style='+'", "r");
+    if (!fd) {
         char *msg = strdup("550 Error while opening directory\r\n");
         write(clients[index].control_fd, msg, strlen(msg));
         return;
     }
     write(clients[index].control_fd, FILEOKAY, strlen(FILEOKAY));
-    while ((list = readdir(dir))) {
-        char tmp[256] = {0};
-        snprintf(tmp, sizeof(tmp), "%s\n", list->d_name);
-        write(clients[index].data_fd, tmp, strlen(tmp));
+    char buf2[BUFSIZ];
+    my_put_nbr(clients[index].data_fd);
+    while (fgets(buf2, BUFSIZ, fd) > 0) {
+        write(clients[index].data_fd, buf2, strlen(buf2));
+        memset(buf2, 0, BUFSIZ);
     }
-    closedir(dir);
+    fclose(fd);
     send_list_data("", index, clients);
     clear_client_data(index, clients);
 }
 
 void do_list_with_params(int index, t_clients *clients, char *buf)
 {
+    accept_data(index, clients);
     if (does_client_has_data(index, clients) == 0)
         return;
     buf[strlen(buf) - 2] = '\0';
@@ -50,21 +51,23 @@ void do_list_with_params(int index, t_clients *clients, char *buf)
 
 void exec_list_params(int index, t_clients *clients, char *val)
 {
-    DIR *dir;
-    struct dirent *list;
-    dir = opendir(val);
-    if (!dir) {
+    accept_data(index, clients);
+    char *buf = malloc(sizeof(char) * 10000);
+    sprintf(buf, "ls -l %s --time-style='+'", val);
+    FILE *fd = popen(buf, "r");
+    if (!fd) {
         char *msg = strdup("550 Error while opening directory\r\n");
         write(clients[index].control_fd, msg, strlen(msg));
         return;
     }
     write(clients[index].control_fd, FILEOKAY, strlen(FILEOKAY));
-    while ((list = readdir(dir))) {
-        char tmp[256] = {0};
-        snprintf(tmp, sizeof(tmp), "%s\n", list->d_name);
-        write(clients[index].data_fd, tmp, strlen(tmp));
+    char buf2[BUFSIZ];
+    while (fgets(buf2, BUFSIZ, fd) > 0) {
+        write(clients[index].data_fd, buf2, strlen(buf2));
+        memset(buf2, 0, BUFSIZ);
     }
-    closedir(dir);
+    free(buf);
+    fclose(fd);
     send_list_data("", index, clients);
     clear_client_data(index, clients);
 }

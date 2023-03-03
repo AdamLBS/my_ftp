@@ -17,11 +17,16 @@ void clear_client_data(int index, t_clients *clients)
     clients[index].data_fd = -1;
     clients[index].data_port = -1;
     clients[index].original_data_fd = -1;
+    if (!clients[index].pasv)
+        free(clients[index].activ_ip);
+    clients[index].activ_ip = NULL;
+    clients[index].activ_port = 0;
+    clients[index].pasv = false;
 }
 
 int does_client_has_data(int index, t_clients *clients)
 {
-    if (clients[index].data_fd == -1 &&
+    if (clients[index].pasv &&
     clients[index].original_data_fd == -1) {
         write(clients[index].control_fd, NODATA, strlen(NODATA));
         return 0;

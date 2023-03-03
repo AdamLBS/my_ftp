@@ -42,10 +42,11 @@
     #define WRONGUSRMSG "530 Wrong USER.\r\n"
     #define HELPMSG "214 Help message.\r\n"
     #define ERRORCWD "550 Failed to change directory.\r\n"
-    #define ERRORDEL "501 No file name.\r\n"
+    #define ERRORDEL "550 No file name.\r\n"
     #define PORTERR "425 Can't open data connection.\r\n"
     #define PORTOKAY "200 Command okay.\r\n"
     #define TYPEOKAY "200 Switching to Binary mode.\r\n"
+    #define _GNU_SOURCE
     struct clients {
         int data_fd;
         int control_fd;
@@ -60,6 +61,9 @@
         char *data_buffer;
         bool check_read;
         int readfd;
+        bool pasv;
+        int activ_port;
+        char *activ_ip;
     } typedef t_clients;
 
 
@@ -134,4 +138,5 @@
     int get_port(char *port1, char *port2);
     char *get_client_ip(char **parsed);
     void free_port_val(char *ip, char **parsed);
+    void accept_data(int index, t_clients *clients);
 #endif /* !MY_H_ */

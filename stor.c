@@ -9,14 +9,14 @@
 
 void do_stor_cmd(int index, t_clients *clients, char *buf)
 {
+    accept_data(index, clients);
     buf[strlen(buf) - 2] = '\0';
     char **parsed = malloc(sizeof(char *) * strlen(buf));
     char *current, *separator = strdup(" ");
     int i = 0, fd;
-    while ((current = strtok_r(buf, separator, &buf))) {
+    for (; (current = strtok_r(buf, separator, &buf)); i++) {
         char *new_string = strdup(current);
         parsed[i] = new_string;
-        i++;
     }
     if (clients[index].data_fd == -1 &&
     clients[index].original_data_fd == -1) {

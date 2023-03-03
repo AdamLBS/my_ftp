@@ -21,7 +21,6 @@ void loop_server(int serversocket, t_clients *clients, t_server *server)
         if (selectqueue >= 0) {
             check_server_connections(serversocket, &rfds, clients,
             &selectqueue);
-            check_data_connections(&rfds, clients, &selectqueue);
             read_sockets(&rfds, clients, selectqueue);
         }
     }

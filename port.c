@@ -18,15 +18,10 @@ void do_port_cmd(int index, t_clients *clients, char *buf)
         write(clients[index].control_fd, PORTERR, strlen(PORTERR));
         return;
     }
-    int port = get_port(parsed[4], parsed[5]);
-    data_addr.sin_addr.s_addr = inet_addr(ip);
-    data_addr.sin_port = htons(port);
-    data_addr.sin_family = AF_INET;
-    clients[index].data_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (check_port_connection(clients, index, data_addr, ip))
-        return;
+    clients[index].activ_ip = strdup(ip);
+    clients[index].activ_port = get_port(parsed[4], parsed[5]);
+    clients[index].pasv = false;
     write(clients[index].control_fd, PORTOKAY, strlen(PORTOKAY));
-    clients[index].original_data_fd = clients[index].data_fd;
     free_port_val(ip, parsed);
 }
 

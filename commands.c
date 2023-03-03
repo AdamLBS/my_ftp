@@ -33,8 +33,10 @@ void send_pasv_info(char *adress, int port, int fd)
 
 void do_retr_cmd(int index, t_clients *clients, char *buf)
 {
-    buf[strlen(buf) - 2] = '\0';
+    accept_data(index, clients);
     char **parsed = malloc(sizeof(char *) * strlen(buf));
+    memset(parsed, 0, strlen(buf));
+    buf[strlen(buf) - 2] = '\0';
     char *current, *separator = strdup(" ");
     int i = 0, fd;
     while ((current = strtok_r(buf, separator, &buf))) {
@@ -55,10 +57,6 @@ void do_retr_cmd(int index, t_clients *clients, char *buf)
 
 void send_file_to_data(int index, t_clients *clients, char *path, int fd)
 {
-    if (!path) {
-        write(clients[index].control_fd, "550 Failed to open file.\n\r", 26);
-        return;
-    }
     char *buf = malloc(sizeof(char) * 1024);
     memset(buf, 0, 1024);
     ssize_t byte = 0;

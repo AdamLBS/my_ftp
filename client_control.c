@@ -23,8 +23,10 @@ void handle_client_control(int index, t_clients *clients)
     char buf[1000] = {0};
     int val = read(clients[index].control_fd, buf, 1000);
     if (val == 0 && clients[index].control_fd) {
+        clear_buffer(index, clients);
         close(clients[index].control_fd);
         clients[index].control_fd = -1;
+        return;
     }
     strcat(clients[index].buffer, buf);
     if (!is_buffer_ended(index, clients))

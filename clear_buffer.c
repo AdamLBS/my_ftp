@@ -9,6 +9,8 @@
 
 void clear_buffer(int index, t_clients *clients)
 {
-    free(clients[index].buffer);
-    clients[index].buffer = NULL;
+    if (clients[index].buffer) {
+        free(clients[index].buffer);
+        clients[index].buffer = NULL;
+    }
 }

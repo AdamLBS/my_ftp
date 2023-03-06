@@ -21,7 +21,7 @@ void clear_client_data(int index, t_clients *clients)
         free(clients[index].activ_ip);
     clients[index].activ_ip = NULL;
     clients[index].activ_port = 0;
-    clients[index].pasv = false;
+    clients[index].pasv = true;
 }
 
 int does_client_has_data(int index, t_clients *clients)

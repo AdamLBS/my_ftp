@@ -33,43 +33,41 @@ void send_pasv_info(char *adress, int port, int fd)
 
 void do_retr_cmd(int index, t_clients *clients, char *buf)
 {
-    accept_data(index, clients);
     char **parsed = malloc(sizeof(char *) * strlen(buf));
     memset(parsed, 0, strlen(buf));
     buf[strlen(buf) - 2] = '\0';
     char *current, *separator = strdup(" ");
-    int i = 0, fd;
-    while ((current = strtok_r(buf, separator, &buf))) {
+    FILE *fd;
+    for (int i = 0; (current = strtok_r(buf, separator, &buf)); i++) {
         char *new_string = strdup(current);
         parsed[i] = new_string;
-        i++;
     }
-    if (clients[index].data_fd == -1 && clients[index].original_data_fd == -1) {
+    if (clients[index].data_fd == -1 && clients[index].original_data_fd == -1
+    && clients[index].pasv) {
         write(clients[index].control_fd, NODATA, strlen(NODATA));
         return;
     }
-    if (parsed[1] && (fd = open(parsed[1], O_RDONLY)) == -1) {
+    if (parsed[1] && (fd = fopen(parsed[1],"rb")) == NULL) {
         write(clients[index].control_fd, "550 Failed to open file.\n\r", 26);
         return;
     }
+    accept_data(index, clients);
     send_file_to_data(index, clients, parsed[1], fd);
 }
 
-void send_file_to_data(int index, t_clients *clients, char *path, int fd)
+void send_file_to_data(int index, t_clients *clients, char *path, FILE *fd)
 {
-    char *buf = malloc(sizeof(char) * 1024);
-    memset(buf, 0, 1024);
-    ssize_t byte = 0;
+    struct stat info;
+    stat(path, &info);
+    my_put_nbr(info.st_size);
+    char *buf = malloc(sizeof(char) * info.st_size);
+    memset(buf, 0, info.st_size);
+    int size = 0;
+    int bytes_read = 0;
+    fread(buf + size, sizeof(char), info.st_size, fd);
+    fclose(fd);
     write(clients[index].control_fd, FILEOKAY, strlen(FILEOKAY));
-    while (1) {
-        byte = read(fd, buf, sizeof(buf));
-        if (byte == -1 || byte == 0) {
-            break;
-        }
-        write(clients[index].data_fd, buf, strlen(buf));
-        memset(buf, 0, 1024);
-    }
-    close(fd);
+    write(clients[index].data_fd, buf, info.st_size);
     free(buf);
     write(clients[index].control_fd, CLOSEDATA, strlen(CLOSEDATA));
     clear_client_data(index, clients);

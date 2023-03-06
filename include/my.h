@@ -89,7 +89,7 @@
     void do_user_cmd(int index, t_clients *clients, char *buf);
     void do_pass_cmd(int index, t_clients *clients, char *buf);
     int is_login_or_pass(char *buf);
-    void send_file_to_data(int index, t_clients *clients, char *path, int fd);
+    void send_file_to_data(int index, t_clients *clients, char *path, FILE *fd);
     void clear_client_data(int index, t_clients *clients);
     void do_noop(int index, t_clients *clients);
     int my_getnbr(char *str);
@@ -139,4 +139,5 @@
     char *get_client_ip(char **parsed);
     void free_port_val(char *ip, char **parsed);
     void accept_data(int index, t_clients *clients);
+    int check_dir(char *path);
 #endif /* !MY_H_ */

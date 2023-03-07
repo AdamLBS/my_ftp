@@ -48,7 +48,7 @@ void do_retr_cmd(int index, t_clients *clients, char *buf)
         return;
     }
     if (parsed[1] && (fd = fopen(parsed[1],"rb")) == NULL) {
-        write(clients[index].control_fd, "550 Failed to open file.\n\r", 26);
+        write(clients[index].control_fd, "550 Failed to open file.\r\n", 26);
         return;
     }
     accept_data(index, clients);

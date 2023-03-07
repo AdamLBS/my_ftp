@@ -60,7 +60,7 @@
         char *buffer;
         char *data_buffer;
         bool check_read;
-        int readfd;
+        FILE *readfd;
         bool pasv;
         int activ_port;
         char *activ_ip;

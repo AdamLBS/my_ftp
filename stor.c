@@ -33,8 +33,7 @@ void do_stor_cmd(int index, t_clients *clients, char *buf)
 
 void upload_data_to_file(int index, t_clients *clients, char *path)
 {
-    int myfd = open(path, O_CREAT | O_WRONLY,
-        S_IRUSR | S_IWUSR);
+    FILE *fd = fopen(path, "w");
     clients[index].check_read = true;
-    clients[index].readfd = myfd;
+    clients[index].readfd = fd;
 }
